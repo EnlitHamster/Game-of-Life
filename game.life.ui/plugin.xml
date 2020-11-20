@@ -4,48 +4,48 @@
 	<extension
 		point="org.eclipse.ui.editors">
 		<editor
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.XtextEditor"
 			contributorClass="org.eclipse.ui.editors.text.TextEditorActionContributor"
 			default="true"
 			extensions="gldsl"
-			id="gol.tasks.TaskDSL"
-			name="TaskDSL Editor">
+			id="game.life.GoLDSL"
+			name="GoLDSL Editor">
 		</editor>
 	</extension>
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclarationHandler"
 			commandId="org.eclipse.xtext.ui.editor.hyperlinking.OpenDeclaration">
 			<activeWhen>
 				<reference
-					definitionId="gol.tasks.TaskDSL.Editor.opened">
+					definitionId="game.life.GoLDSL.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
-			commandId="gol.tasks.TaskDSL.validate">
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.handler.ValidateActionHandler"
+			commandId="game.life.GoLDSL.validate">
 			<activeWhen>
 				<reference
-					definitionId="gol.tasks.TaskDSL.Editor.opened">
+					definitionId="game.life.GoLDSL.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
 		<!-- copy qualified name -->
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedNameHandler"
 			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName">
 			<activeWhen>
-				<reference definitionId="gol.tasks.TaskDSL.Editor.opened" />
+				<reference definitionId="game.life.GoLDSL.Editor.opened" />
 			</activeWhen>
 		</handler>
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedNameHandler"
 			commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.OutlineCopyQualifiedName">
 			<activeWhen>
 				<and>
-					<reference definitionId="gol.tasks.TaskDSL.XtextEditor.opened" />
+					<reference definitionId="game.life.GoLDSL.XtextEditor.opened" />
 					<iterate>
 						<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 					</iterate>
@@ -54,22 +54,22 @@
 		</handler>
 	</extension>
 	<extension point="org.eclipse.core.expressions.definitions">
-		<definition id="gol.tasks.TaskDSL.Editor.opened">
+		<definition id="game.life.GoLDSL.Editor.opened">
 			<and>
 				<reference definitionId="isActiveEditorAnInstanceOfXtextEditor"/>
 				<with variable="activeEditor">
 					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
-						value="gol.tasks.TaskDSL"
+						value="game.life.GoLDSL"
 						forcePluginActivation="true"/>
 				</with>
 			</and>
 		</definition>
-		<definition id="gol.tasks.TaskDSL.XtextEditor.opened">
+		<definition id="game.life.GoLDSL.XtextEditor.opened">
 			<and>
 				<reference definitionId="isXtextEditorActive"/>
 				<with variable="activeEditor">
 					<test property="org.eclipse.xtext.ui.editor.XtextEditor.languageName"
-						value="gol.tasks.TaskDSL"
+						value="game.life.GoLDSL"
 						forcePluginActivation="true"/>
 				</with>
 			</and>
@@ -78,33 +78,33 @@
 	<extension
 			point="org.eclipse.ui.preferencePages">
 		<page
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-			id="gol.tasks.TaskDSL"
-			name="TaskDSL">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="game.life.GoLDSL"
+			name="GoLDSL">
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 		</page>
 		<page
-			category="gol.tasks.TaskDSL"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
-			id="gol.tasks.TaskDSL.coloring"
+			category="game.life.GoLDSL"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.syntaxcoloring.SyntaxColoringPreferencePage"
+			id="game.life.GoLDSL.coloring"
 			name="Syntax Coloring">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 		</page>
 		<page
-			category="gol.tasks.TaskDSL"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
-			id="gol.tasks.TaskDSL.templates"
+			category="game.life.GoLDSL"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.templates.XtextTemplatePreferencePage"
+			id="game.life.GoLDSL.templates"
 			name="Templates">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 		</page>
 	</extension>
 	<extension
 			point="org.eclipse.ui.propertyPages">
 		<page
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
-			id="gol.tasks.TaskDSL"
-			name="TaskDSL">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.preferences.LanguageRootPreferencePage"
+			id="game.life.GoLDSL"
+			name="GoLDSL">
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -114,14 +114,14 @@
 	<extension
 		point="org.eclipse.ui.keywords">
 		<keyword
-			id="gol.tasks.ui.keyword_TaskDSL"
-			label="TaskDSL"/>
+			id="game.life.ui.keyword_GoLDSL"
+			label="GoLDSL"/>
 	</extension>
 	<extension
 		point="org.eclipse.ui.commands">
 		<command
 			description="Trigger expensive validation"
-			id="gol.tasks.TaskDSL.validate"
+			id="game.life.GoLDSL.validate"
 			name="Validate">
 		</command>
 		<!-- copy qualified name -->
@@ -142,12 +142,12 @@
 		<menuContribution
 			locationURI="popup:#TextEditorContext?after=group.edit">
 			<command
-				commandId="gol.tasks.TaskDSL.validate"
+				commandId="game.life.GoLDSL.validate"
 				style="push"
 				tooltip="Trigger expensive validation">
 				<visibleWhen checkEnabled="false">
 					<reference
-						definitionId="gol.tasks.TaskDSL.Editor.opened">
+						definitionId="game.life.GoLDSL.Editor.opened">
 					</reference>
 				</visibleWhen>
 			</command>
@@ -157,7 +157,7 @@
 			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="gol.tasks.TaskDSL.Editor.opened" />
+					<reference definitionId="game.life.GoLDSL.Editor.opened" />
 				</visibleWhen>
 			</command>
 		</menuContribution>
@@ -165,7 +165,7 @@
 			<command commandId="org.eclipse.xtext.ui.editor.copyqualifiedname.EditorCopyQualifiedName"
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="gol.tasks.TaskDSL.Editor.opened" />
+					<reference definitionId="game.life.GoLDSL.Editor.opened" />
 				</visibleWhen>
 			</command>
 		</menuContribution>
@@ -174,7 +174,7 @@
 				style="push" tooltip="Copy Qualified Name">
 				<visibleWhen checkEnabled="false">
 					<and>
-						<reference definitionId="gol.tasks.TaskDSL.XtextEditor.opened" />
+						<reference definitionId="game.life.GoLDSL.XtextEditor.opened" />
 						<iterate>
 							<adapt type="org.eclipse.xtext.ui.editor.outline.IOutlineNode" />
 						</iterate>
@@ -187,7 +187,7 @@
 		<menuContribution locationURI="popup:#TextEditorContext?endof=group.find">
 			<command commandId="org.eclipse.xtext.ui.editor.FindReferences">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="gol.tasks.TaskDSL.Editor.opened">
+					<reference definitionId="game.life.GoLDSL.Editor.opened">
 					</reference>
 				</visibleWhen>
 			</command>
@@ -195,11 +195,11 @@
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.findrefs.FindReferencesHandler"
 			commandId="org.eclipse.xtext.ui.editor.FindReferences">
 			<activeWhen>
 				<reference
-					definitionId="gol.tasks.TaskDSL.Editor.opened">
+					definitionId="game.life.GoLDSL.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -208,8 +208,8 @@
 		<content-type
 			base-type="org.eclipse.core.runtime.text"
 			file-extensions="gldsl"
-			id="gol.tasks.TaskDSL.contenttype"
-			name="TaskDSL File"
+			id="game.life.GoLDSL.contenttype"
+			name="GoLDSL File"
 			priority="normal">
 		</content-type>
 	</extension>
@@ -217,68 +217,68 @@
 	<extension
 		point="org.eclipse.emf.ecore.extension_parser">
 		<parser
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.resource.IResourceFactory"
 			type="gldsl">
 		</parser>
 	</extension>
 	<extension point="org.eclipse.xtext.extension_resourceServiceProvider">
 		<resourceServiceProvider
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.resource.IResourceUIServiceProvider"
 			uriExtension="gldsl">
 		</resourceServiceProvider>
 	</extension>
-	<!-- marker definitions for gol.tasks.TaskDSL -->
+	<!-- marker definitions for game.life.GoLDSL -->
 	<extension
-			id="taskdsl.check.fast"
-			name="TaskDSL Problem"
+			id="goldsl.check.fast"
+			name="GoLDSL Problem"
 			point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.xtext.ui.check.fast"/>
 		<persistent value="true"/>
 	</extension>
 	<extension
-			id="taskdsl.check.normal"
-			name="TaskDSL Problem"
+			id="goldsl.check.normal"
+			name="GoLDSL Problem"
 			point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.xtext.ui.check.normal"/>
 		<persistent value="true"/>
 	</extension>
 	<extension
-			id="taskdsl.check.expensive"
-			name="TaskDSL Problem"
+			id="goldsl.check.expensive"
+			name="GoLDSL Problem"
 			point="org.eclipse.core.resources.markers">
 		<super type="org.eclipse.xtext.ui.check.expensive"/>
 		<persistent value="true"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			category="gol.tasks.TaskDSL"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
-			id="gol.tasks.TaskDSL.validator.preferencePage"
+			category="game.life.GoLDSL"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.validation.ValidatorPreferencePage"
+			id="game.life.GoLDSL.validator.preferencePage"
 			name="Errors/Warnings">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 		</page>
 	</extension>
 	<extension point="org.eclipse.xtext.builder.participant">
 		<participant
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.builder.IXtextBuilderParticipant"
 			fileExtensions="gldsl"/>
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			category="gol.tasks.TaskDSL"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-			id="gol.tasks.TaskDSL.compiler.preferencePage"
+			category="game.life.GoLDSL"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="game.life.GoLDSL.compiler.preferencePage"
 			name="Compiler">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 		</page>
 	</extension>
 	<extension point="org.eclipse.ui.propertyPages">
 		<page
-			category="gol.tasks.TaskDSL"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
-			id="gol.tasks.TaskDSL.compiler.propertyPage"
+			category="game.life.GoLDSL"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.builder.preferences.BuilderPreferencePage"
+			id="game.life.GoLDSL.compiler.propertyPage"
 			name="Compiler">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 			<enabledWhen>
 				<adapt type="org.eclipse.core.resources.IProject"/>
 			</enabledWhen>
@@ -289,20 +289,20 @@
 		<menuContribution locationURI="popup:#TextEditorContext?after=xtext.ui.openDeclaration">
 			<command
 				commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand"
-				id="gol.tasks.TaskDSL.OpenGeneratedCode"
+				id="game.life.GoLDSL.OpenGeneratedCode"
 				style="push">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="gol.tasks.TaskDSL.Editor.opened" />
+					<reference definitionId="game.life.GoLDSL.Editor.opened" />
 				</visibleWhen>
 			</command>
 		</menuContribution>
 	</extension>
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.generator.trace.OpenGeneratedFileHandler"
 			commandId="org.eclipse.xtext.ui.OpenGeneratedFileCommand">
 			<activeWhen>
-				<reference definitionId="gol.tasks.TaskDSL.Editor.opened" />
+				<reference definitionId="game.life.GoLDSL.Editor.opened" />
 			</activeWhen>
 		</handler>
 	</extension>
@@ -310,11 +310,11 @@
 	<extension
 		point="org.eclipse.ui.handlers">
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.outline.quickoutline.ShowQuickOutlineActionHandler"
 			commandId="org.eclipse.xtext.ui.editor.outline.QuickOutline">
 			<activeWhen>
 				<reference
-					definitionId="gol.tasks.TaskDSL.Editor.opened">
+					definitionId="game.life.GoLDSL.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -334,33 +334,33 @@
 				style="push"
 				tooltip="Open Quick Outline">
 				<visibleWhen checkEnabled="false">
-					<reference definitionId="gol.tasks.TaskDSL.Editor.opened"/>
+					<reference definitionId="game.life.GoLDSL.Editor.opened"/>
 				</visibleWhen>
 			</command>
 		</menuContribution>
 	</extension>
-	<!-- quickfix marker resolution generator for gol.tasks.TaskDSL -->
+	<!-- quickfix marker resolution generator for game.life.GoLDSL -->
 	<extension
 			point="org.eclipse.ui.ide.markerResolution">
 		<markerResolutionGenerator
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="game.life.ui.taskdsl.check.fast">
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="game.life.ui.goldsl.check.fast">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
 			</attribute>
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="game.life.ui.taskdsl.check.normal">
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="game.life.ui.goldsl.check.normal">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
 			</attribute>
 		</markerResolutionGenerator>
 		<markerResolutionGenerator
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
-			markerType="game.life.ui.taskdsl.check.expensive">
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.quickfix.MarkerResolutionGenerator"
+			markerType="game.life.ui.goldsl.check.expensive">
 			<attribute
 				name="FIXABLE_KEY"
 				value="true">
@@ -370,11 +370,11 @@
 	<!-- Rename Refactoring -->
 	<extension point="org.eclipse.ui.handlers">
 		<handler
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.DefaultRenameElementHandler"
 			commandId="org.eclipse.xtext.ui.refactoring.RenameElement">
 			<activeWhen>
 				<reference
-					definitionId="gol.tasks.TaskDSL.Editor.opened">
+					definitionId="game.life.GoLDSL.Editor.opened">
 				</reference>
 			</activeWhen>
 		</handler>
@@ -386,7 +386,7 @@
 				style="push">
 				<visibleWhen checkEnabled="false">
 					<reference
-						definitionId="gol.tasks.TaskDSL.Editor.opened">
+						definitionId="game.life.GoLDSL.Editor.opened">
 					</reference>
 				</visibleWhen>
 			</command>
@@ -394,34 +394,34 @@
 	</extension>
 	<extension point="org.eclipse.ui.preferencePages">
 		<page
-			category="gol.tasks.TaskDSL"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
-			id="gol.tasks.TaskDSL.refactoring"
+			category="game.life.GoLDSL"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.refactoring.ui.RefactoringPreferencePage"
+			id="game.life.GoLDSL.refactoring"
 			name="Refactoring">
-			<keywordReference id="gol.tasks.ui.keyword_TaskDSL"/>
+			<keywordReference id="game.life.ui.keyword_GoLDSL"/>
 		</page>
 	</extension>
 	<extension point="org.eclipse.compare.contentViewers">
-		<viewer id="gol.tasks.TaskDSL.compare.contentViewers"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+		<viewer id="game.life.GoLDSL.compare.contentViewers"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
 			extensions="gldsl">
 		</viewer>
 		<contentTypeBinding
-			contentTypeId="gol.tasks.TaskDSL.contenttype"
-			contentViewerId="gol.tasks.TaskDSL.compare.contentViewers" />
+			contentTypeId="game.life.GoLDSL.contenttype"
+			contentViewerId="game.life.GoLDSL.compare.contentViewers" />
 	</extension>
 	<extension point="org.eclipse.compare.contentMergeViewers">
-		<viewer id="gol.tasks.TaskDSL.compare.contentMergeViewers"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
-			extensions="gldsl" label="TaskDSL Compare">
+		<viewer id="game.life.GoLDSL.compare.contentMergeViewers"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.compare.InjectableViewerCreator"
+			extensions="gldsl" label="GoLDSL Compare">
 		</viewer>
 		<contentTypeBinding
-			contentTypeId="gol.tasks.TaskDSL.contenttype"
-			contentMergeViewerId="gol.tasks.TaskDSL.compare.contentMergeViewers" />
+			contentTypeId="game.life.GoLDSL.contenttype"
+			contentMergeViewerId="game.life.GoLDSL.compare.contentMergeViewers" />
 	</extension>
 	<extension point="org.eclipse.ui.editors.documentProviders">
-		<provider id="gol.tasks.TaskDSL.editors.documentProviders"
-			class="gol.tasks.ui.TaskDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
+		<provider id="game.life.GoLDSL.editors.documentProviders"
+			class="game.life.ui.GoLDSLExecutableExtensionFactory:org.eclipse.xtext.ui.editor.model.XtextDocumentProvider"
 			extensions="gldsl">
 		</provider>
 	</extension>

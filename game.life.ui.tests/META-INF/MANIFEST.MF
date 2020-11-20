@@ -14,6 +14,5 @@ Require-Bundle: game.life.ui,
  org.eclipse.core.runtime,
  org.eclipse.xtext.ui.testing,
  org.eclipse.ui.workbench;resolution:=optional
-Bundle-RequiredExecutionEnvironment: JavaSE-11
-Export-Package: gol.tasks.ui.tests;x-internal=true,
- game.life.ui.tests;x-internal=true
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: game.life.ui.tests;x-internal=true
