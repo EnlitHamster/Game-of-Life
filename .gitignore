@@ -8,10 +8,6 @@
 
 # Below is only needed when Git repo is inside the Eclipse workspace
 .metadata/
-**/.project
-**/.classpath
-**/.settings/
-**/.launch/
 
 # Linux specific
 **/.directory
