@@ -1,0 +1,32 @@
+grammar game.life.GoLDSL with org.eclipse.xtext.common.Terminals
+
+generate goLDSL "http://www.life.game/GoLDSL"
+
+Model:
+	'Rules:' rules += EvaluationRule+ 
+;
+	
+EvaluationRule: 
+	outcome = Outcome
+	condition = RuleCondition
+;
+
+RuleCondition:
+	{RuleOtherwise} 'otherwise' |
+	{RuleCompare} 
+		'when' ('neighbours')? // We identify this as optional text if it helps the user understand the DSL better
+		op = Operator 
+		amount = INT
+;
+
+enum Outcome:
+	LIVE = 'Live' |
+	DIE = 'Die'   |
+	BECOMEALIVE = 'Become alive'
+;
+
+enum Operator:
+	LT = 'less than' |
+	EQ = 'equal to'  |
+	GT = 'more than'
+;

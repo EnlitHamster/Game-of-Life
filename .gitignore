@@ -1,0 +1,17 @@
+**/src-gen/*
+**/xtend-gen/*
+**/bin/
+**/test-bin/
+**/model/generated/
+!.gitkeep
+.antlr-generator-*-patch.jar
+
+# Below is only needed when Git repo is inside the Eclipse workspace
+.metadata/
+**/.project
+**/.classpath
+**/.settings/
+**/.launch/
+
+# Linux specific
+**/.directory
