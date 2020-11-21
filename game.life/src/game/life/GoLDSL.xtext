@@ -2,8 +2,31 @@ grammar game.life.GoLDSL with org.eclipse.xtext.common.Terminals
 
 generate goLDSL "http://www.life.game/GoLDSL"
 
+/**
+ * In the following text, we will present our interpretation of the grammar and the 
+ * given constraints on it. From the assignment's text some ambiguity arises, especially
+ * from the keywords "easy" and "complex". As no reference point has been given, we
+ * decided that the grammar should be easy and not complex w.r.t. a non-programmer user.
+ * 
+ * That results in the following implementation guidelines:
+ * 1 - The DSL should be as close to English as possible.
+ * 2 - The propositions are combined in Disjunctive Normal Form (DNF), as it is the most 
+ *     natural and simple to write.
+ * 3 - The content of the propositions is limited to comparative statements using less than,
+ *     equals to and greater than.
+ * 4 - The combination of 2 and 3 ensures that all possible rules can be created, given the
+ *     following lemmas: (a) any propositional logic statement can be written in DNF and
+ *     (b) <, = and > create a total order on the set of natural numbers
+ * 
+ * For the Grid initialization the following holds:
+ * 1 - The grid can be randomly initialized by using the Random keyword after Grid:
+ * 2 - Both Patterns and Coordinates can be used simultaneously to generate the Grid
+ * 3 - The Grid rules will be applied in sequence, this is to avoid conflicts in the rules
+ */
+
 Model:
 	'Rules:' rules += EvaluationRule+ 
+	'Grid:' rand = ('Random')? init += GridRule+
 ;
 	
 EvaluationRule: 
@@ -32,4 +55,29 @@ enum Operator:
 	EQ = 'equal to'  |
 	GT = 'more than'
 ;
+
+GridRule: Pattern | Coord;
+
+Pattern: state = State 'when' condition = PatternCondition;
+
+PatternCondition: patterns += PatternStmt ('and' patterns += PatternStmt)*;
+
+PatternStmt: 
+	{PatternStmtX} 'x' op = OperatorEx amount = INT 	|
+	{PatternStmtY} 'y' op = OperatorEx amount = INT
+;
+
+enum OperatorEx:
+	LT = 'less than' |
+	EQ = 'equal to'  |
+	GT = 'more than' |
+	MOD = 'divisible by'
+;
+
+enum State:
+	ALIVE = 'Alive' |
+	DEAD = 'Dead'
+;
+
+Coord: '(' x = INT ',' y = INT ')';
 
