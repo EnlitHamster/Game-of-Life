@@ -11,12 +11,14 @@ EvaluationRule:
 	condition = RuleCondition
 ;
 
-RuleCondition:
-	{RuleOtherwise} 'otherwise' |
-	{RuleCompare} 
-		'when' ('neighbours')? // We identify this as optional text if it helps the user understand the DSL better
-		op = Operator 
-		amount = INT
+RuleCondition: {RuleOtherwise} 'otherwise' | {RuleConj} 'when' conj = RuleConditionLevel1;
+
+RuleConditionLevel1: compares += RuleCompare ('and' compares += RuleCompare)*;
+
+RuleCompare:
+	('neighbours')? // We identify this as optional text if it helps the user understand the DSL better
+	op = Operator 
+	amount = INT
 ;
 
 enum Outcome:
@@ -30,3 +32,4 @@ enum Operator:
 	EQ = 'equal to'  |
 	GT = 'more than'
 ;
+
