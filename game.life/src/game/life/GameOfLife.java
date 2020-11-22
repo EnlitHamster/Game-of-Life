@@ -19,7 +19,7 @@ public class GameOfLife extends JFrame implements ActionListener {
     private JMenuBar mb_menu;
     private JMenu m_file, m_game, m_help;
     private JMenuItem mi_file_options, mi_file_exit;
-    private JMenuItem mi_game_autofill, mi_game_play, mi_game_stop, mi_game_reset;
+    private JMenuItem mi_game_autofill, mi_game_play, mi_game_stop, mi_game_reset, mi_game_initial;
     private JMenuItem mi_help_about, mi_help_source;
     private int i_movesPerSecond = 3;
     private GameBoard gb_gameBoard;
@@ -57,6 +57,8 @@ public class GameOfLife extends JFrame implements ActionListener {
         m_file.add(mi_file_exit);
         mi_game_autofill = new JMenuItem("Autofill");
         mi_game_autofill.addActionListener(this);
+        mi_game_initial = new JMenuItem("Initial Grid");
+        mi_game_initial.addActionListener(this);
         mi_game_play = new JMenuItem("Play");
         mi_game_play.addActionListener(this);
         mi_game_stop = new JMenuItem("Stop");
@@ -65,6 +67,7 @@ public class GameOfLife extends JFrame implements ActionListener {
         mi_game_reset = new JMenuItem("Reset");
         mi_game_reset.addActionListener(this);
         m_game.add(mi_game_autofill);
+        m_game.add(mi_game_initial);
         m_game.add(new JSeparator());
         m_game.add(mi_game_play);
         m_game.add(mi_game_stop);
@@ -147,7 +150,13 @@ public class GameOfLife extends JFrame implements ActionListener {
                 }
             });
             f_autoFill.setVisible(true);
-        } else if (ae.getSource().equals(mi_game_reset)) {
+        } else if (ae.getSource().equals(mi_game_initial)) {
+        	gb_gameBoard.resetBoard();
+        	ArrayList<Point> initPoints = RulesOfLife.initializeGrid();
+        	gb_gameBoard.point.addAll(initPoints);
+        	repaint();
+        }
+        else if (ae.getSource().equals(mi_game_reset)) {
             gb_gameBoard.resetBoard();
             gb_gameBoard.repaint();
         } else if (ae.getSource().equals(mi_game_play)) {

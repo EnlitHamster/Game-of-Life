@@ -32,6 +32,11 @@ package game.life;
                 	} 
             }
         }
+
 	}
+		
+		public static ArrayList<Point> initializeGrid() {
+			return new ArrayList<Point>();
+		}
 
 }
