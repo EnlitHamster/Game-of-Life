@@ -1,14 +1,17 @@
 package game.life.validation
 
+import game.life.generator.TextGenerator
+import game.life.goLDSL.Coord
+import game.life.goLDSL.GoLDSLPackage.Literals
 import game.life.goLDSL.Model
 import game.life.goLDSL.RuleCompare
+import game.life.goLDSL.RuleCondition
 import game.life.goLDSL.RuleConj
 import game.life.goLDSL.RuleOtherwise
 import game.life.utils.EvalRules
 import game.life.utils.EvalRules.Cond
 import java.util.List
 import org.eclipse.xtext.validation.Check
-import game.life.goLDSL.RuleCondition
 
 class GoLDSLValidator extends AbstractGoLDSLValidator {
 	
@@ -24,7 +27,7 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 		val sat = applyConds(conds)
 		
 		if (!sat.contains(true))
-			warning("This condition is not satisfiable and will have no side effects.", null)
+			warning("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
 	}
 	
 	@Check
@@ -39,12 +42,27 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 			} else {
 				val sat = applyConds(EvalRules.genPredicate(c as RuleConj))
 				for (var j = 0; j < cover.length; j++)
-					if (!cover.get(i)) cover.set(i, sat.get(i))
+					if (!cover.get(j)) cover.set(j, sat.get(j))
 			}
 		}
 		
-		if (!hasOtherwise && cover.contains(false))
-			error("The rules do not cover all possibilities.\nSuggestion: use otherwise on one of the outcomes to make it the default one.", null)
+		if (!hasOtherwise && cover.contains(false)) {
+			var String missingVals = "";
+			for (var i = 0; i < cover.length; i++)
+				if (!cover.get(i)) missingVals += i + ", "
+			missingVals = "(" + missingVals.substring(0, missingVals.length - 2) + ")";
+			error( "The rules do not cover all possibilities.\n
+					The missing values are: " + missingVals + "\n
+					Suggestion: use otherwise on one of the outcomes to make it the default one.", null)
+		}
+	}
+	
+	@Check
+	def checkGridCoordsValid(Coord c) {
+		if (c.x <= 0 || c.x > TextGenerator.GRID_SIZE)
+			error("Value must be between 1 and 40", Literals.COORD__X)
+		if (c.y <= 0 || c.y > TextGenerator.GRID_SIZE)
+			error("Value must be between 1 and 40", Literals.COORD__Y)
 	}
 	
 	def static applyConds(List<Cond> conds) {

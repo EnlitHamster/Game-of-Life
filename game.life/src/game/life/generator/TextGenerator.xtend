@@ -20,7 +20,7 @@ import java.util.Random
 
 class TextGenerator {
 	
-	public static val GRID_SIZE = 10;
+	public static val GRID_SIZE = 40;
 	
 	def static toText(Model model) '''
 	Rules:
@@ -59,7 +59,7 @@ class TextGenerator {
 	}
 	
 	def static dispatch applyRule(boolean[][] matrix, Coord rule) {
-		matrix.get(rule.y).set(rule.x, true)
+		matrix.get(rule.y - 1).set(rule.x - 1, rule.state == State.ALIVE)
 	}
 	
 	def static dispatch applyRule(boolean[][] matrix, Invert rule) {
