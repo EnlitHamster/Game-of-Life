@@ -26,7 +26,7 @@ generate goLDSL "http://www.life.game/GoLDSL"
 
 Model:
 	'Rules:' rules += EvaluationRule+ 
-	'Grid:' rand = ('Random')? init += GridRule+
+	'Grid:' (rand ?= 'Random')? init += GridRule*
 ;
 	
 EvaluationRule: 
@@ -39,7 +39,7 @@ RuleCondition: {RuleOtherwise} 'otherwise' | {RuleConj} 'when' conj = RuleCondit
 RuleConditionLevel1: compares += RuleCompare ('and' compares += RuleCompare)*;
 
 RuleCompare:
-	('neighbours')? // We identify this as optional text if it helps the user understand the DSL better
+	('neighbors')? // We identify this as optional text if it helps the user understand the DSL better
 	op = Operator 
 	amount = INT
 ;
@@ -56,15 +56,15 @@ enum Operator:
 	GT = 'more than'
 ;
 
-GridRule: Pattern | Coord;
+GridRule: Pattern | Coord | {Invert} 'Invert';
 
 Pattern: state = State 'when' condition = PatternCondition;
 
-PatternCondition: patterns += PatternStmt ('and' patterns += PatternStmt)*;
+PatternCondition: stmts += PatternStmt ('and' stmts += PatternStmt)*;
 
 PatternStmt: 
-	{PatternStmtX} 'x' op = OperatorEx amount = INT 	|
-	{PatternStmtY} 'y' op = OperatorEx amount = INT
+	{PatternStmtX} 'x' (neg ?= 'not')? op = OperatorEx amount = INT 	|
+	{PatternStmtY} 'y' (neg ?= 'not')? op = OperatorEx amount = INT
 ;
 
 enum OperatorEx:
