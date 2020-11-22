@@ -1,5 +1,8 @@
 package game.life.validation
 
+import game.life.generator.TextGenerator
+import game.life.goLDSL.Coord
+import game.life.goLDSL.GoLDSLPackage.Literals
 import game.life.goLDSL.Model
 import game.life.goLDSL.RuleCompare
 import game.life.goLDSL.RuleCondition
@@ -52,6 +55,14 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 					The missing values are: " + missingVals + "\n
 					Suggestion: use otherwise on one of the outcomes to make it the default one.", null)
 		}
+	}
+	
+	@Check
+	def checkGridCoordsValid(Coord c) {
+		if (c.x <= 0 || c.x > TextGenerator.GRID_SIZE)
+			error("Value must be between 1 and 40", Literals.COORD__X)
+		if (c.y <= 0 || c.y > TextGenerator.GRID_SIZE)
+			error("Value must be between 1 and 40", Literals.COORD__Y)
 	}
 	
 	def static applyConds(List<Cond> conds) {

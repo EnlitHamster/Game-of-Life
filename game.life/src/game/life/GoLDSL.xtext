@@ -79,5 +79,5 @@ enum State:
 	DEAD = 'Dead'
 ;
 
-Coord: '(' x = INT ',' y = INT ')';
+Coord: state = State ('in')? '(' x = INT ',' y = INT ')';
 
