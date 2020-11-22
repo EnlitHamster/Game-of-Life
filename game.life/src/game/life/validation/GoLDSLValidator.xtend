@@ -24,7 +24,7 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 		val sat = applyConds(conds)
 		
 		if (!sat.contains(true))
-			warning("This condition is not satisfiable and will have no side effects.", null)
+			warning("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
 	}
 	
 	@Check
@@ -39,12 +39,19 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 			} else {
 				val sat = applyConds(EvalRules.genPredicate(c as RuleConj))
 				for (var j = 0; j < cover.length; j++)
-					if (!cover.get(i)) cover.set(i, sat.get(i))
+					if (!cover.get(j)) cover.set(j, sat.get(j))
 			}
 		}
 		
-		if (!hasOtherwise && cover.contains(false))
-			error("The rules do not cover all possibilities.\nSuggestion: use otherwise on one of the outcomes to make it the default one.", null)
+		if (!hasOtherwise && cover.contains(false)) {
+			var String missingVals = "";
+			for (var i = 0; i < cover.length; i++)
+				if (!cover.get(i)) missingVals += i + ", "
+			missingVals = "(" + missingVals.substring(0, missingVals.length - 2) + ")";
+			error( "The rules do not cover all possibilities.\n
+					The missing values are: " + missingVals + "\n
+					Suggestion: use otherwise on one of the outcomes to make it the default one.", null)
+		}
 	}
 	
 	def static applyConds(List<Cond> conds) {
