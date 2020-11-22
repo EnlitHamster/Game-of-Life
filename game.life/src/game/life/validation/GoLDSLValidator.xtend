@@ -2,13 +2,13 @@ package game.life.validation
 
 import game.life.goLDSL.Model
 import game.life.goLDSL.RuleCompare
+import game.life.goLDSL.RuleCondition
 import game.life.goLDSL.RuleConj
 import game.life.goLDSL.RuleOtherwise
 import game.life.utils.EvalRules
 import game.life.utils.EvalRules.Cond
 import java.util.List
 import org.eclipse.xtext.validation.Check
-import game.life.goLDSL.RuleCondition
 
 class GoLDSLValidator extends AbstractGoLDSLValidator {
 	
