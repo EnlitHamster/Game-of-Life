@@ -292,9 +292,10 @@ public class GameOfLife extends JFrame implements ActionListener {
                 gameBoard[current.x+1][current.y+1] = true;
             }
             ArrayList<Point> survivingCells = new ArrayList<Point>(0);
+            ArrayList<Point> dieingCells = new ArrayList<Point>(0);
             // Iterate through the array, follow game of life rules
-           // RulesOfLifeOrig.computeSurvivors(gameBoard,survivingCells);
-            RulesOfLife.computeSurvivors(gameBoard,survivingCells);
+           // RulesOfLifeOrig.computeSurvivors(gameBoard,survivingCells,dieingCells);
+            RulesOfLife.computeSurvivors(gameBoard,survivingCells, dieingCells);
             /*
             for (int i=1; i<gameBoard.length-1; i++) {
                 for (int j=1; j<gameBoard[0].length-1; j++) {
@@ -323,6 +324,7 @@ public class GameOfLife extends JFrame implements ActionListener {
             */
             resetBoard();
             point.addAll(survivingCells);
+            point.removeAll(dieingCells);
             repaint();
             try {
                 Thread.sleep(1000/i_movesPerSecond);

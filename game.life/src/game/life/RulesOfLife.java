@@ -4,7 +4,7 @@ package game.life;
 	import java.util.ArrayList;
 
 	public class RulesOfLife {
-		public static void computeSurvivors(boolean[][] gameBoard, ArrayList<Point> survivingCells) {
+		public static void computeSurvivors(boolean[][] gameBoard, ArrayList<Point> survivingCells,  ArrayList<Point> dieingCells) {
         	// Iterate through the array, follow game of life rules
        	 for (int i=1; i<gameBoard.length-1; i++) {
             for (int j=1; j<gameBoard[0].length-1; j++) {
