@@ -20,5 +20,6 @@ class GoLDSLGenerator extends AbstractGenerator {
 		val root = resource.allContents.head as Model
 		if (root !== null)
 			fsa.generateFile("TextRef.txt", TextGenerator.toText(root))
+			fsa.generateFile("RulesOfLife.java", RolGenerator.toCode(root))
 	}
 }
