@@ -322,7 +322,6 @@ public class GameOfLife extends JFrame implements ActionListener {
                 }
             }
             */
-            resetBoard();
             point.addAll(survivingCells);
             point.removeAll(dieingCells);
             repaint();
