@@ -1,17 +1,27 @@
 package game.life.generator
 
+import game.life.goLDSL.Coord
 import game.life.goLDSL.EvaluationRule
+import game.life.goLDSL.GridRule
+import game.life.goLDSL.Invert
 import game.life.goLDSL.Model
 import game.life.goLDSL.Operator
-import game.life.goLDSL.Outcome
+import game.life.goLDSL.Pattern
 import game.life.goLDSL.RuleCompare
 import game.life.goLDSL.RuleConditionLevel1
-import game.life.goLDSL.RuleConj
-import game.life.goLDSL.RuleOtherwise
+import game.life.goLDSL.State
+import game.life.utils.EvalRules
+import game.life.utils.EvalRules.Rules
+import game.life.utils.Predicate
+import game.life.utils.Predicate.Stmt
+import java.util.Iterator
 import java.util.List
+import java.util.Random
 
 class RolGenerator {
 	
+	
+	public static val GRID_SIZE = 40;
 		
 	def static toCode(Model model) '''
 	package game.life;
@@ -45,29 +55,20 @@ class RolGenerator {
 	}'''
 	
 	def static CharSequence genRules(List<EvaluationRule> rules) {
-		var List<RuleConditionLevel1> cDie = newArrayList()
-		var List<RuleConditionLevel1> cLive = newArrayList()
-		var List<RuleConditionLevel1> cBecome = newArrayList()
+		val Rules conds = EvalRules.genEvalRules(rules);
 		var String otherwise = "if (true) { }"
 		
-		for (r : rules) {
-			val conj = genConj(r.condition)
-			if (r.outcome == Outcome::DIE) {if (conj === null) cDie = null else cDie.add(conj)}
-			else if (r.outcome == Outcome::LIVE) {if (conj === null) cLive = null else cLive.add(conj)}
-			else {if (conj === null) cBecome = null else cBecome.add(conj)}
-		}
-		
-		if (cDie === null){
+		if (conds.die() === null){
 				otherwise = "if (gameBoard[i][j]) {
 			 					dieingCells.add(new Point(i-1,j-1));
 							}"
 		}
-		if (cLive === null){			
+		if (conds.live() === null){			
 			otherwise = "if (gameBoard[i][j]) {
 						  	survivingCells.add(new Point(i-1,j-1));
 						}"
 		}
-		if (cBecome === null){
+		if (conds.become() === null){
 				otherwise = "if (!gameBoard[i][j]) {
 						 		survivingCells.add(new Point(i-1,j-1));
 							}"
@@ -76,22 +77,22 @@ class RolGenerator {
 		
 		return '''
 		
-		«IF cDie !== null»
-			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(cDie)»«") {\n"»
+		«IF conds.die() !== null»
+			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(conds.die())»«") {\n"»
 			«"\t\t\t dieingCells.add(new Point(i-1,j-1)); \n"»
 			«"\t\t}"»
 			«"\t\t else"»		
 		«ENDIF»
 		
-		«IF cLive !== null»
-			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(cLive)»«") {\n"»
+		«IF conds.live() !== null»
+			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(conds.live())»«") {\n"»
 			«"\t\t\t  survivingCells.add(new Point(i-1,j-1));\n "»
 			«"\t\t}"»
 			«"\t\t else"»
 		«ENDIF»
 		
-		«IF cBecome !== null»
-			«"\t\t if ((!gameBoard[i][j]) &&"»«genConditions(cBecome)»«") {\n"»
+		«IF conds.become() !== null»
+			«"\t\t if ((!gameBoard[i][j]) &&"»«genConditions(conds.become())»«") {\n"»
 			«"\t\t\t survivingCells.add(new Point(i-1,j-1));\n"»
 			«"\t\t}"»
 			«"\t\t else"»
@@ -105,11 +106,7 @@ class RolGenerator {
 		«"\t"»return new ArrayList<Point>();
 		'''
 	}
-	
-	def static dispatch genConj(RuleConj r) {return r.conj}
-	
-	def static dispatch genConj(RuleOtherwise r) {return null}
-	
+		
 	def static genConditions(List<RuleConditionLevel1> conditions) '''«FOR c : conditions SEPARATOR " or "»«genCondition(c)»«ENDFOR»'''
 	
 	def static genCondition(RuleConditionLevel1 r) '''(«FOR c : r.compares SEPARATOR " and "»«genCompare(c)»«ENDFOR»)'''
@@ -123,5 +120,46 @@ class RolGenerator {
 			case Operator::GT: return '''>'''
 		}
 	}
+	
+	def static CharSequence genGrid(boolean rand, List<GridRule> rules) {
+		var matrix = Array2D.boolArray(GRID_SIZE, GRID_SIZE)
+		val random = new Random();
+		
+		for (var i = 0; i < GRID_SIZE; i++)
+			for (var j = 0; j < GRID_SIZE; j++)
+				matrix.get(i).set(j, rand ? random.nextBoolean() : false);		
+				
+		for (rule : rules) applyRule(matrix, rule)
+				
+		return '''
+		«FOR array : matrix»
+		«FOR b : array SEPARATOR " " AFTER "\n"»«b ? "X" : "O"»«ENDFOR»
+		«ENDFOR»'''
+	}
+	
+	def static dispatch applyRule(boolean[][] matrix, Pattern rule) {
+		val bVal = rule.state == State.ALIVE;
+		val List<Stmt> predicate = Predicate.genPredicate(rule.condition.stmts)
+		
+		for (var i = 0; i < matrix.length; i++)
+			for (var j = 0; j < matrix.get(i).length; j++) {
+				var Iterator<Stmt> iPred = predicate.iterator();
+				var boolean check = true;
+				while (check && iPred.hasNext())
+					check = iPred.next().apply(j, i)
+				if (check) matrix.get(i).set(j, bVal)
+			}
+	}
+	
+	def static dispatch applyRule(boolean[][] matrix, Coord rule) {
+		matrix.get(rule.y - 1).set(rule.x - 1, rule.state == State.ALIVE)
+	}
+	
+	def static dispatch applyRule(boolean[][] matrix, Invert rule) {
+		for (var i = 0; i < GRID_SIZE; i++)
+			for (var j = 0; j < GRID_SIZE; j++)
+				matrix.get(i).set(j, !matrix.get(i).get(j))
+	}
+	
 	
 }
