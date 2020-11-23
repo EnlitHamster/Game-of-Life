@@ -49,7 +49,10 @@ class RolGenerator {
 	
 		}
 			public static ArrayList<Point> initializeGrid() {
-	«genGrid(model.rules)»
+				ArrayList<Point> points = new ArrayList<Point>();
+							
+	«genGrid(model.rand, model.init)»
+				return points;
 			}
 	
 	}'''
@@ -100,12 +103,6 @@ class RolGenerator {
 		«otherwise»
 		'''
 	}
-	
-	def static CharSequence genGrid(List<EvaluationRule> rules) {
-		return '''
-		«"\t"»return new ArrayList<Point>();
-		'''
-	}
 		
 	def static genConditions(List<RuleConditionLevel1> conditions) '''«FOR c : conditions SEPARATOR " or "»«genCondition(c)»«ENDFOR»'''
 	
@@ -130,11 +127,27 @@ class RolGenerator {
 				matrix.get(i).set(j, rand ? random.nextBoolean() : false);		
 				
 		for (rule : rules) applyRule(matrix, rule)
+		
+		val List<String> pointsList = newArrayList();
+		
+		var x = -1;
+		var y = -1;
+		for (array : matrix){
+			x = x +1;
+			y = -1;
+			for (b : array){
+				y = y+1;
+				if (b){
+					pointsList.add("points.add(new Point("+x+","+y+"));")
+				}
+			}
+		}
 				
-		return '''
-		«FOR array : matrix»
-		«FOR b : array SEPARATOR " " AFTER "\n"»«b ? "X" : "O"»«ENDFOR»
-		«ENDFOR»'''
+		return '''	
+		«FOR point : pointsList BEFORE "\t\t" AFTER "\n"»
+			«point»
+		«ENDFOR»
+		'''
 	}
 	
 	def static dispatch applyRule(boolean[][] matrix, Pattern rule) {
