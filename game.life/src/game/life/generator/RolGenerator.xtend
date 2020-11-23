@@ -48,13 +48,29 @@ class RolGenerator {
 		var List<RuleConditionLevel1> cDie = newArrayList()
 		var List<RuleConditionLevel1> cLive = newArrayList()
 		var List<RuleConditionLevel1> cBecome = newArrayList()
-		var String otherwise = ""
+		var String otherwise = "if (true) { }"
 		
 		for (r : rules) {
 			val conj = genConj(r.condition)
 			if (r.outcome == Outcome::DIE) {if (conj === null) cDie = null else cDie.add(conj)}
 			else if (r.outcome == Outcome::LIVE) {if (conj === null) cLive = null else cLive.add(conj)}
 			else {if (conj === null) cBecome = null else cBecome.add(conj)}
+		}
+		
+		if (cDie === null){
+				otherwise = "if (gameBoard[i][j]) {
+			 					dieingCells.add(new Point(i-1,j-1));
+							}"
+		}
+		if (cLive === null){			
+			otherwise = "if (gameBoard[i][j]) {
+						  	survivingCells.add(new Point(i-1,j-1));
+						}"
+		}
+		if (cBecome === null){
+				otherwise = "if (!gameBoard[i][j]) {
+						 		survivingCells.add(new Point(i-1,j-1));
+							}"
 		}
 		
 		
@@ -64,30 +80,21 @@ class RolGenerator {
 			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(cDie)»«") {\n"»
 			«"\t\t\t dieingCells.add(new Point(i-1,j-1)); \n"»
 			«"\t\t}"»
-		«ELSE»
-			«otherwise = "if (gameBoard[i][j]) {
-			 dieingCells.add(new Point(i-1,j-1));
-				}"»
+			«"\t\t else"»		
 		«ENDIF»
 		
 		«IF cLive !== null»
-			«"\t\t else if ((gameBoard[i][j]) &&"»«genConditions(cLive)»«") {\n"»
+			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(cLive)»«") {\n"»
 			«"\t\t\t  survivingCells.add(new Point(i-1,j-1));\n "»
 			«"\t\t}"»
-		«ELSE»
-			«otherwise = "if (gameBoard[i][j]) {
-						 survivingCells.add(new Point(i-1,j-1));
-							}"»
+			«"\t\t else"»
 		«ENDIF»
 		
 		«IF cBecome !== null»
-			«"\t\t else if ((!gameBoard[i][j]) &&"»«genConditions(cBecome)»«") {\n"»
+			«"\t\t if ((!gameBoard[i][j]) &&"»«genConditions(cBecome)»«") {\n"»
 			«"\t\t\t survivingCells.add(new Point(i-1,j-1));\n"»
 			«"\t\t}"»
-		«ELSE»
-			«otherwise = "else if (!gameBoard[i][j]) {
-						 survivingCells.add(new Point(i-1,j-1));
-							}"»
+			«"\t\t else"»
 		«ENDIF»
 		«otherwise»
 		'''
