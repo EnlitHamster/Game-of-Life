@@ -2,10 +2,13 @@ package game.life.validation
 
 import game.life.generator.RolGenerator
 import game.life.goLDSL.Coord
+import game.life.goLDSL.EvaluationRule
 import game.life.goLDSL.GoLDSLPackage.Literals
-import game.life.goLDSL.Model
 import game.life.goLDSL.GridRule
 import game.life.goLDSL.Invert
+import game.life.goLDSL.Model
+import game.life.goLDSL.Operator
+import game.life.goLDSL.Outcome
 import game.life.goLDSL.RuleCompare
 import game.life.goLDSL.RuleCondition
 import game.life.goLDSL.RuleConj
@@ -14,35 +17,52 @@ import game.life.utils.EvalRules
 import game.life.utils.EvalRules.Cond
 import java.util.List
 import org.eclipse.xtext.validation.Check
-import game.life.goLDSL.Outcome
 
 class GoLDSLValidator extends AbstractGoLDSLValidator {
 	
 	@Check
 	def checkOutOfBoundEvalRule(RuleCompare rc) {
-		if (rc.amount < 0 || rc.amount > 8)
-			error("The number of neighbors must be in a range from 0 to 8.", null)
+		if (rc.amount < 0 || rc.amount > 8) {
+			if (rc.amount > 8 && rc.op == Operator.LT)
+				warning("This condition is always satisfied.\nThis means it will always be applied", null)
+			else if (rc.amount < 0 && rc.op == Operator.GT)
+				warning("This condition is always satisfied.\nThis means it will always be applied", null)
+			else 
+				error("The number of neighbors must be in a range from 0 to 8.", null)		
+		}
 	}
 	
 	@Check
 	def checkUselessEvalRule(RuleConj rc) {
 		val conds = EvalRules.genPredicate(rc)		
-		val sat = applyConds(conds)
+		val boolean[] sat = applyConds(conds)
 		
 		if (!sat.contains(true))
-			info("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
+			warning("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
+		else {
+			val op = rc.conj.compares.get(0).op
+			if (rc.conj.compares.size() > 1 || op != Operator::EQ) {
+			var nSat = 0
+			var lastSat = -1
+			for (var i = 0; i < sat.length; i++) if (sat.get(i)) {nSat++; lastSat = i}
+			if (nSat == 1)
+				info("This condition is equivalent to \"neighbors equal to " + lastSat + "\"", null)
+			}
+		}
 	}
 	
 	@Check
 	def checkEvalRulesCover(Model m) {		
 		var boolean[] cover = #[false, false, false, false, false, false, false, false, false]
 		var hasOtherwise = false;
+		val List<EvaluationRule> rules = newArrayList();
 		
 		for (var i = 0; i < m.rules.length && (!hasOtherwise || cover.contains(false)); i++) {
 			val RuleCondition c = m.rules.get(i).condition
 			if (c instanceof RuleOtherwise) {
 				hasOtherwise = true;
 			} else if (m.rules.get(i).outcome != Outcome::BECOMEALIVE) {
+				rules.add(m.rules.get(i))
 				val sat = applyConds(EvalRules.genPredicate(c as RuleConj))
 				for (var j = 0; j < cover.length; j++)
 					if (!cover.get(j)) cover.set(j, sat.get(j))
@@ -54,11 +74,32 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 			for (var i = 0; i < cover.length; i++)
 				if (!cover.get(i)) missingVals += i + ", "
 			missingVals = "(" + missingVals.substring(0, missingVals.length - 2) + ")";
-			error( "The Live and die rules do not cover all possible neighbor values.\n
-					The missing values are: " + missingVals + "\n
-					Suggestion: use otherwise on one of those outcomes to make it the default one.", null)
+			for (r : rules)
+				error( "The Live and die rules do not cover all possible neighbor values.\n
+						The missing values are: " + missingVals + "\n
+						Suggestion: use otherwise on one of those outcomes to make it the default one.", r, null, -1)
 		}
 	}
+	
+	@Check
+	def checkBecomeAliveOtherwise(EvaluationRule er) {
+		if (er.outcome == Outcome::BECOMEALIVE && er.condition instanceof RuleOtherwise)
+			warning("This way cells will always become alive", er, null, -1)
+	}
+	
+	@Check
+	def checkMultipleOtherwiseLiveDie(Model m) {
+		val List<EvaluationRule> rules = newArrayList();
+		
+		for (r : m.rules)
+			if ((r.outcome == Outcome::LIVE || r.outcome == Outcome::DIE) &&
+				(r.condition instanceof RuleOtherwise))
+				rules.add(r)
+				
+		if (rules.size() > 1)
+			for (r : rules)
+				error("Multiple otherwises on live/die. Please define only one.", r, null, -1)
+	}  
 	
 	@Check
 	def checkGridCoordsValid(Coord c) {
@@ -74,8 +115,8 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
         for (var i = 0; i < rules.length - 1; i++)
             if (rules.get(i) instanceof Invert &&
                 rules.get(i+1) instanceof Invert) {
-                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", null)
-                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", null)
+                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", rules.get(i), null, -1)
+                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", rules.get(i+1), null, -1)
                 }
     }
 	
