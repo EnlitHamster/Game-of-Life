@@ -12,8 +12,8 @@ import javax.swing.*;
  * mathematician John Conway.
  */
 public class GameOfLife extends JFrame implements ActionListener {
-    private static final Dimension DEFAULT_WINDOW_SIZE = new Dimension(800, 600);
-    private static final Dimension MINIMUM_WINDOW_SIZE = new Dimension(400, 400);
+    private static final Dimension DEFAULT_WINDOW_SIZE = new Dimension(620, 620);
+    private static final Dimension MINIMUM_WINDOW_SIZE = new Dimension(620, 620);
     private static final int BLOCK_SIZE = 10;
  
     private JMenuBar mb_menu;
@@ -36,6 +36,7 @@ public class GameOfLife extends JFrame implements ActionListener {
         game.setLocation((Toolkit.getDefaultToolkit().getScreenSize().width - game.getWidth())/2, 
                 (Toolkit.getDefaultToolkit().getScreenSize().height - game.getHeight())/2);
         game.setVisible(true);
+        game.setResizable(false);
     }
  
     public GameOfLife() {
