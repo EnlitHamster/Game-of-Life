@@ -1,9 +1,11 @@
 package game.life.validation
 
-import game.life.generator.TextGenerator
+import game.life.generator.RolGenerator
 import game.life.goLDSL.Coord
 import game.life.goLDSL.GoLDSLPackage.Literals
 import game.life.goLDSL.Model
+import game.life.goLDSL.GridRule
+import game.life.goLDSL.Invert
 import game.life.goLDSL.RuleCompare
 import game.life.goLDSL.RuleCondition
 import game.life.goLDSL.RuleConj
@@ -27,7 +29,7 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 		val sat = applyConds(conds)
 		
 		if (!sat.contains(true))
-			warning("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
+			info("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
 	}
 	
 	@Check
@@ -39,7 +41,7 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 			val RuleCondition c = m.rules.get(i).condition
 			if (c instanceof RuleOtherwise) {
 				hasOtherwise = true;
-			} else {
+			} else if (m.rules.get(i).outcome != Outcome::BECOMEALIVE) {
 				val sat = applyConds(EvalRules.genPredicate(c as RuleConj))
 				for (var j = 0; j < cover.length; j++)
 					if (!cover.get(j)) cover.set(j, sat.get(j))
@@ -51,19 +53,30 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 			for (var i = 0; i < cover.length; i++)
 				if (!cover.get(i)) missingVals += i + ", "
 			missingVals = "(" + missingVals.substring(0, missingVals.length - 2) + ")";
-			error( "The rules do not cover all possibilities.\n
+			error( "The Live and die rules do not cover all possible neighbor values.\n
 					The missing values are: " + missingVals + "\n
-					Suggestion: use otherwise on one of the outcomes to make it the default one.", null)
+					Suggestion: use otherwise on one of those outcomes to make it the default one.", null)
 		}
 	}
 	
 	@Check
 	def checkGridCoordsValid(Coord c) {
-		if (c.x <= 0 || c.x > TextGenerator.GRID_SIZE)
-			error("Value must be between 1 and 40", Literals.COORD__X)
-		if (c.y <= 0 || c.y > TextGenerator.GRID_SIZE)
-			error("Value must be between 1 and 40", Literals.COORD__Y)
+		if (c.x <= 0 || c.x > RolGenerator.GRID_SIZE)
+			error("Value must be between 1 and " + RolGenerator.GRID_SIZE, Literals.COORD__X)
+		if (c.y <= 0 || c.y > RolGenerator.GRID_SIZE)
+			error("Value must be between 1 and " + RolGenerator.GRID_SIZE, Literals.COORD__Y)
 	}
+
+    @Check
+    def checkGridDoubleInvert(Model model) {
+        List<GridRule> rules = model.init
+        for (var i = 0; i < rules.length - 1; i++)
+            if (rules.get(i) instanceof Invert &&
+                rules.get(i+1) instanceof Invert) {
+                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", rules.get(i))
+                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", rules.get(i+1))
+                }
+    }
 	
 	def static applyConds(List<Cond> conds) {
 		var sat = #[true, true, true, true, true, true, true, true, true]

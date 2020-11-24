@@ -20,7 +20,6 @@ import java.util.Random
 
 class RolGenerator {
 	
-	
 	public static val GRID_SIZE = 50;
 		
 	def static toCode(Model model) '''
