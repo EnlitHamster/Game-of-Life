@@ -99,9 +99,9 @@ class RolGenerator {
 		'''
 	}
 		
-	def static genConditions(List<RuleConditionLevel1> conditions) '''«FOR c : conditions SEPARATOR " or "»«genCondition(c)»«ENDFOR»'''
+	def static genConditions(List<RuleConditionLevel1> conditions) '''«FOR c : conditions SEPARATOR " || "»«genCondition(c)»«ENDFOR»'''
 	
-	def static genCondition(RuleConditionLevel1 r) '''(«FOR c : r.compares SEPARATOR " and "»«genCompare(c)»«ENDFOR»)'''
+	def static genCondition(RuleConditionLevel1 r) '''(«FOR c : r.compares SEPARATOR " && "»«genCompare(c)»«ENDFOR»)'''
 	
 	def static genCompare(RuleCompare r) '''surrounding «genOp(r.op)» «r.amount»'''
 	
