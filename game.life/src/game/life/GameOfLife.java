@@ -12,7 +12,7 @@ import javax.swing.*;
  * mathematician John Conway.
  */
 public class GameOfLife extends JFrame implements ActionListener {
-    private static final Dimension DEFAULT_WINDOW_SIZE = new Dimension(530, 580);
+    private static final Dimension DEFAULT_WINDOW_SIZE = new Dimension(540, 590);
     private static final Dimension MINIMUM_WINDOW_SIZE = new Dimension(520, 560);
     private static final int BLOCK_SIZE = 10;
  
