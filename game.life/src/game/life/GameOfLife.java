@@ -1,4 +1,4 @@
-package game.life;
+package GameOfLife;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -323,6 +323,7 @@ public class GameOfLife extends JFrame implements ActionListener {
                 }
             }
             */
+            //resetBoard();
             point.addAll(survivingCells);
             point.removeAll(dieingCells);
             repaint();
