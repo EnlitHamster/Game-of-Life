@@ -1,0 +1,55 @@
+Rules:
+
+	Live when neighbors more than 1 and neighbors less than 4
+	Die otherwise
+	Become alive when equal to 3
+
+Grid:
+
+	// Square
+	Alive in (2,6)
+	Alive in (2,7)
+	Alive in (3,6)
+	Alive in (3,7)
+	
+	// Slinger
+	Alive in (12,6)
+	Alive in (12,7)
+	Alive in (12,8)
+	Alive in (13,5)
+	Alive in (13,9)
+	Alive in (14,4)
+	Alive in (14,10)
+	Alive in (15,4)
+	Alive in (15,10)
+	Alive in (16,7)
+	Alive in (17,5)
+	Alive in (17,9)
+	Alive in (18,6)
+	Alive in (18,7)
+	Alive in (18,8)
+	Alive in (19,7)
+	
+	// Glider
+	Alive in (22, 4)
+	Alive in (22, 5)
+	Alive in (22, 6)
+	Alive in (23, 4)
+	Alive in (23, 5)
+	Alive in (23, 6)
+	Alive in (24, 3)
+	Alive in (24, 7)
+	Alive in (26, 2)
+	Alive in (26, 3)
+	Alive in (26, 7)
+	Alive in (26, 8)
+	
+	// Square
+	Alive in (36, 4)
+	Alive in (36, 5)
+	Alive in (37, 4)
+	Alive in (37, 5)
+	
+	
+	
+	

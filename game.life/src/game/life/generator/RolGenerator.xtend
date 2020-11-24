@@ -154,13 +154,13 @@ class RolGenerator {
 				var Iterator<Stmt> iPred = predicate.iterator();
 				var boolean check = true;
 				while (check && iPred.hasNext())
-					check = iPred.next().apply(j, i)
+					check = iPred.next().apply(i, j)
 				if (check) matrix.get(i).set(j, bVal)
 			}
 	}
 	
 	def static dispatch applyRule(boolean[][] matrix, Coord rule) {
-		matrix.get(rule.y - 1).set(rule.x - 1, rule.state == State.ALIVE)
+		matrix.get(rule.x - 1).set(rule.y - 1, rule.state == State.ALIVE)
 	}
 	
 	def static dispatch applyRule(boolean[][] matrix, Invert rule) {
