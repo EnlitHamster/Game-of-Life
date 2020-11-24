@@ -14,6 +14,7 @@ import game.life.utils.EvalRules
 import game.life.utils.EvalRules.Cond
 import java.util.List
 import org.eclipse.xtext.validation.Check
+import game.life.goLDSL.Outcome
 
 class GoLDSLValidator extends AbstractGoLDSLValidator {
 	
@@ -69,12 +70,12 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 
     @Check
     def checkGridDoubleInvert(Model model) {
-        List<GridRule> rules = model.init
+       var List<GridRule> rules = model.init
         for (var i = 0; i < rules.length - 1; i++)
             if (rules.get(i) instanceof Invert &&
                 rules.get(i+1) instanceof Invert) {
-                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", rules.get(i))
-                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", rules.get(i+1))
+                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", null)
+                    info("Consecutive inverts have no side effects.\nThis means they can be safely removed", null)
                 }
     }
 	
