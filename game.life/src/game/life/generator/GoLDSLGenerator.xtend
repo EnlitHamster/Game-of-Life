@@ -15,11 +15,16 @@ import org.eclipse.xtext.generator.IGeneratorContext
  * See https://www.eclipse.org/Xtext/documentation/303_runtime_concepts.html#code-generation
  */
 class GoLDSLGenerator extends AbstractGenerator {
+	
+	private static var String fileName = "..//src//GameOfLife//RulesOfLife.java"
 
 	override void doGenerate(Resource resource, IFileSystemAccess2 fsa, IGeneratorContext context) {
 		val root = resource.allContents.head as Model
 		if (root !== null)
 			fsa.generateFile("TextRef.txt", TextGenerator.toText(root))
-			fsa.generateFile("RulesOfLife.java", RolGenerator.toCode(root))
+			if (fsa.isFile(fileName)){				
+				fsa.deleteFile(fileName);
+			}
+			fsa.generateFile(fileName, RolGenerator.toCode(root))
 	}
 }

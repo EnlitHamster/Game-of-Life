@@ -20,7 +20,7 @@ import java.util.Random
 
 class TextGenerator {
 	
-	public static val GRID_SIZE = 40;
+	public static val GRID_SIZE = 50;
 	
 	def static toText(Model model) '''
 	Rules:

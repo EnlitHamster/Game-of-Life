@@ -21,10 +21,10 @@ import java.util.Random
 class RolGenerator {
 	
 	
-	public static val GRID_SIZE = 40;
+	public static val GRID_SIZE = 50;
 		
 	def static toCode(Model model) '''
-	package game.life;
+	package GameOfLife;
 	
 		import java.awt.Point;
 		import java.util.ArrayList;
@@ -43,7 +43,7 @@ class RolGenerator {
 	                if (gameBoard[i+1][j-1]) { surrounding++; }
 	                if (gameBoard[i+1][j])   { surrounding++; }
 	                if (gameBoard[i+1][j+1]) { surrounding++; }
-	«genRules(model.rules)»
+					«genRules(model.rules)»
 	            }
 	        }
 	
@@ -51,7 +51,7 @@ class RolGenerator {
 			public static ArrayList<Point> initializeGrid() {
 				ArrayList<Point> points = new ArrayList<Point>();
 							
-	«genGrid(model.rand, model.init)»
+				«genGrid(model.rand, model.init)»
 				return points;
 			}
 	
@@ -63,44 +63,40 @@ class RolGenerator {
 		
 		if (conds.die() === null){
 				otherwise = "if (gameBoard[i][j]) {
-			 					dieingCells.add(new Point(i-1,j-1));
-							}"
+	dieingCells.add(new Point(i-1,j-1));
+}"
 		}
 		if (conds.live() === null){			
 			otherwise = "if (gameBoard[i][j]) {
-						  	survivingCells.add(new Point(i-1,j-1));
-						}"
+	survivingCells.add(new Point(i-1,j-1));
+}"
 		}
 		if (conds.become() === null){
 				otherwise = "if (!gameBoard[i][j]) {
-						 		survivingCells.add(new Point(i-1,j-1));
-							}"
+	survivingCells.add(new Point(i-1,j-1));
+}"
 		}
 		
 		
-		return '''
-		
+		return '''		
 		«IF conds.die() !== null»
-			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(conds.die())»«") {\n"»
-			«"\t\t\t dieingCells.add(new Point(i-1,j-1)); \n"»
-			«"\t\t}"»
-			«"\t\t else"»		
-		«ENDIF»
-		
+			«"if ((gameBoard[i][j]) &&"»«genConditions(conds.die())»«") {\n"»
+			«"\t dieingCells.add(new Point(i-1,j-1)); \n"»
+			«"}"»
+			«"else"»
+		«ENDIF»		
 		«IF conds.live() !== null»
-			«"\t\t if ((gameBoard[i][j]) &&"»«genConditions(conds.live())»«") {\n"»
-			«"\t\t\t  survivingCells.add(new Point(i-1,j-1));\n "»
-			«"\t\t}"»
-			«"\t\t else"»
-		«ENDIF»
-		
+			«"if ((gameBoard[i][j]) &&"»«genConditions(conds.live())»«") {\n"»
+			«"\t  survivingCells.add(new Point(i-1,j-1));\n "»
+			«"}"»
+			«"else"»
+		«ENDIF»		
 		«IF conds.become() !== null»
-			«"\t\t if ((!gameBoard[i][j]) &&"»«genConditions(conds.become())»«") {\n"»
-			«"\t\t\t survivingCells.add(new Point(i-1,j-1));\n"»
-			«"\t\t}"»
-			«"\t\t else"»
-		«ENDIF»
-		«otherwise»
+			«"if ((!gameBoard[i][j]) &&"»«genConditions(conds.become())»«") {\n"»
+			«"\t survivingCells.add(new Point(i-1,j-1));\n"»
+			«"}"»
+			«"else"»
+		«ENDIF»«otherwise»
 		'''
 	}
 		
@@ -138,7 +134,7 @@ class RolGenerator {
 			for (b : array){
 				y = y+1;
 				if (b){
-					pointsList.add("points.add(new Point("+x+","+y+"));")
+					pointsList.add("			points.add(new Point("+x+","+y+"));")
 				}
 			}
 		}
