@@ -133,14 +133,14 @@ class RolGenerator {
 			for (b : array){
 				y = y+1;
 				if (b){
-					pointsList.add("			points.add(new Point("+x+","+y+"));")
+					pointsList.add("points.add(new Point("+x+","+y+"));")
 				}
 			}
 		}
 				
 		return '''	
 		«FOR point : pointsList BEFORE "\t\t" AFTER "\n"»
-			«point»
+«point»
 		«ENDFOR»
 		'''
 	}
