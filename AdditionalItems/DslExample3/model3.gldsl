@@ -1,0 +1,10 @@
+Rules:
+
+Die when less than 3
+Become alive when more than 6
+Live otherwise
+
+Grid: 
+
+Alive when x divisible by 3 and y divisible by 3
+Dead when x divisible by 4 and y divisible by 4
