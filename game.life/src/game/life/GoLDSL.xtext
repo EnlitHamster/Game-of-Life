@@ -28,7 +28,14 @@ Model:
 	'Rules:' rules += EvaluationRule+ 
 	'Grid:' (rand ?= 'Random')? init += GridRule*
 ;
-	
+
+// To avoid ambiguity for the user, we require all possible cases for alive cells to be covered
+// This means, all cases from 0 to 8 have to be explicitly stated, either through RuleCompares
+// or RuleOtherwise. The cases for Become alive take the "stay dead" as default, as in this case
+// this assumption is grounded in the fact that the original game itself does not state such
+// rules. For the previous ones this is different, and which one is default case, even if it may
+// seem trivial, is not something to be discarded.
+
 EvaluationRule: 
 	outcome = Outcome
 	condition = RuleCondition
