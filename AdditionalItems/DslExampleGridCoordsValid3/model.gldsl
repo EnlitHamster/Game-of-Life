@@ -1,0 +1,10 @@
+Rules:
+
+	Die when more than 4
+	Live otherwise
+	Become alive when more than 3
+
+Grid:
+
+	Alive when x divisible by 2 and y divisible by 2
+	Alive in (51,0)

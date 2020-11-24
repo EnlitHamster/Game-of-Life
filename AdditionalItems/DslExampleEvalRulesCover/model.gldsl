@@ -1,0 +1,9 @@
+Rules:
+
+	Die when more than 6
+	Live when less than 6
+	Become alive when equal to 3
+
+Grid:
+
+	Alive when x divisible by 2 and y divisible by 2

@@ -34,19 +34,19 @@ class GoLDSLValidator extends AbstractGoLDSLValidator {
 	
 	@Check
 	def checkUselessEvalRule(RuleConj rc) {
-		val conds = EvalRules.genPredicate(rc)		
-		val boolean[] sat = applyConds(conds)
-		
-		if (!sat.contains(true))
-			warning("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
-		else {
-			val op = rc.conj.compares.get(0).op
-			if (rc.conj.compares.size() > 1 || op != Operator::EQ) {
-			var nSat = 0
-			var lastSat = -1
-			for (var i = 0; i < sat.length; i++) if (sat.get(i)) {nSat++; lastSat = i}
-			if (nSat == 1)
-				info("This condition is equivalent to \"neighbors equal to " + lastSat + "\"", null)
+		val op = rc.conj.compares.get(0).op
+		if (rc.conj.compares.size() > 1 || op != Operator::EQ) {
+			val conds = EvalRules.genPredicate(rc)		
+			val boolean[] sat = applyConds(conds)
+			
+			if (!sat.contains(true))
+				warning("This condition is not satisfiable and will have no side effects.\nThis means this condition can be safely removed", null)
+			else {
+					var nSat = 0
+					var lastSat = -1
+					for (var i = 0; i < sat.length; i++) if (sat.get(i)) {nSat++; lastSat = i}
+					if (nSat == 1)
+						info("This condition is equivalent to \"neighbors equal to " + lastSat + "\"", null)
 			}
 		}
 	}
